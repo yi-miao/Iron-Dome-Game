@@ -15,13 +15,42 @@ to demonstrate basic principles of
 - Visual feedback using Pygame
 - Real-time simulation with adjustable parameters
 - Scoring system based on successful interceptions
+- **NEW: 3D model generation from photos and videos** 🎨
+
+## 3D Model Generation
+
+This repository now includes tools to convert photos and videos into 3D models using Python!
+
+### Quick Start
+
+Convert an image to a 3D model:
+
+    python photo_to_3d.py assets/battlefield.png
+
+Convert a video frame to 3D:
+
+    python photo_to_3d.py video/iron_dome.mp4
+
+For detailed documentation, see [3D_CONVERSION_GUIDE.md](3D_CONVERSION_GUIDE.md)
+
+### Supported Features
+- Single image to 3D model conversion
+- Video frame extraction and 3D conversion
+- Multiple export formats (OBJ, PLY, STL)
+- Python API for programmatic use
+- Extensible architecture for advanced techniques
 
 ## Requirements
 
 - Python 3.8+
 - Pygame
+- Additional libraries for 3D conversion (optional)
 
 Install dependencies with:
+
+    pip install -r requirements.txt
+
+Or for just the game:
 
     pip install pygame
 
