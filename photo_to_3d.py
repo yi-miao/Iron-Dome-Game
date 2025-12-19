@@ -20,14 +20,16 @@ import sys
 class Photo3DConverter:
     """Convert photos to 3D models using depth estimation"""
     
-    def __init__(self, output_dir="output_3d_models"):
+    def __init__(self, output_dir="output_3d_models", max_image_size=200):
         """
         Initialize the converter
         
         Args:
             output_dir: Directory to save generated 3D models
+            max_image_size: Maximum dimension for image processing (default: 200)
         """
         self.output_dir = output_dir
+        self.max_image_size = max_image_size
         os.makedirs(output_dir, exist_ok=True)
         print(f"✅ 3D Converter initialized. Output directory: {output_dir}")
     
@@ -155,9 +157,8 @@ class Photo3DConverter:
             return None
         
         # Resize for processing (optional, for performance)
-        max_size = 200
-        if max(image.size) > max_size:
-            ratio = max_size / max(image.size)
+        if max(image.size) > self.max_image_size:
+            ratio = self.max_image_size / max(image.size)
             new_size = (int(image.size[0] * ratio), int(image.size[1] * ratio))
             image = image.resize(new_size, Image.LANCZOS)
             print(f"📏 Resized image to {new_size} for processing")
@@ -225,7 +226,17 @@ class Video3DConverter:
             # Read video
             reader = imageio.get_reader(video_path)
             metadata = reader.get_meta_data()
-            total_frames = metadata.get('fps', 30) * metadata.get('duration', 1)
+            
+            # Get total frame count - try multiple methods
+            total_frames = metadata.get('nframes')
+            if total_frames is None:
+                try:
+                    total_frames = len(reader)
+                except:
+                    # Fallback: estimate from fps and duration
+                    fps = metadata.get('fps', 30)
+                    duration = metadata.get('duration', 1)
+                    total_frames = int(fps * duration) if duration else 100
             
             # Calculate frame indices to extract
             if total_frames < num_frames:
