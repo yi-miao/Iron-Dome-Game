@@ -174,8 +174,11 @@ def main():
         print("\n📁 Check the 'examples_output' directory for generated 3D models")
         print("💡 You can view them in Blender, MeshLab, or online viewers")
         
-    except Exception as e:
+    except (ImportError, IOError, OSError) as e:
         print(f"\n❌ Error running examples: {e}")
+        print("Make sure all dependencies are installed: pip install -r requirements.txt")
+    except Exception as e:
+        print(f"\n❌ Unexpected error running examples: {e}")
         import traceback
         traceback.print_exc()
 

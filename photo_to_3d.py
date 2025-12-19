@@ -232,7 +232,7 @@ class Video3DConverter:
             if total_frames is None:
                 try:
                     total_frames = len(reader)
-                except:
+                except (TypeError, AttributeError, NotImplementedError):
                     # Fallback: estimate from fps and duration
                     fps = metadata.get('fps', 30)
                     duration = metadata.get('duration', 1)
@@ -254,7 +254,7 @@ class Video3DConverter:
                     frame_path = os.path.join(frames_dir, f"frame_{i:04d}.png")
                     imageio.imwrite(frame_path, frame)
                     frame_paths.append(frame_path)
-                except Exception as e:
+                except (IndexError, IOError, RuntimeError, ValueError) as e:
                     print(f"⚠️  Could not extract frame {frame_idx}: {e}")
                     continue
             
@@ -313,8 +313,8 @@ class Video3DConverter:
             if os.path.exists(frames_dir):
                 shutil.rmtree(frames_dir)
                 print("🧹 Cleaned up temporary frames")
-        except:
-            pass
+        except (OSError, PermissionError) as e:
+            print(f"⚠️  Could not clean up temporary frames: {e}")
         
         return result
 
